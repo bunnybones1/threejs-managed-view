@@ -2,7 +2,8 @@ var DOMMode = require('./DOMMode'),
 	EventUtils = require('browser-event-adder'),
 	signals = require('signals'),
 	PerformanceTweaker = require('./PerformanceTweaker'),
-	onResizeSignal = require('input-resize').onResize,
+	Resize = require('input-resize'),
+	onResizeSignal = Resize.onResize,
 	_ = require('lodash'),
 	RenderStats = require('./RenderStats'),
 	RenderManager = require('./RenderManager');
@@ -67,7 +68,7 @@ View.prototype = {
 	setupResizing: function() {
 		this.setSize = this.setSize.bind(this);
 		onResizeSignal.add(this.setSize);
-		this.setSize(window.innerWidth, window.innerHeight);
+		Resize.bump(this.setSize);
 
 	},
 	/**

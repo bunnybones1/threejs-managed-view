@@ -1,5 +1,6 @@
 var ManagedView = require('./');
 var loadAndRunScripts = require('loadandrunscripts');
+var Resize = require('input-resize');
 
 loadAndRunScripts(
 	[
@@ -8,6 +9,8 @@ loadAndRunScripts(
 		'lib/threex.rendererstats.js'
 	],
 	function() {
+		Resize.minWidth = 600;
+		Resize.minHeight = 400;
 		var view = new ManagedView.View({
 			stats:true
 		});
@@ -20,7 +23,7 @@ loadAndRunScripts(
 		var rangeX = 4;
 		var rangeY = 4;
 		
-		var geom = new THREE.SphereGeometry(.1, 16, 16)
+		var geom = new THREE.SphereGeometry(.1, 16, 16);
 
 		var mat = new THREE.MeshBasicMaterial();
 
