@@ -40,6 +40,7 @@ RenderManager.prototype = {
 	 * start rendering
 	 */
 	start: function() {
+		if(this._requestStop = false) return;
 		this._requestStop = false;
 		requestAnimationFrame(this.renderLoop);
 	},
