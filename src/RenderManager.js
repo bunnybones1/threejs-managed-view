@@ -11,6 +11,7 @@ function RenderManager(view) {
 	this.skipFramesCounter = 0;
 	this.onEnterFrame = new signals.Signal();
 	this.onExitFrame = new signals.Signal();
+	this.render = this.render.bind(this);
 	this.renderLoop = this.renderLoop.bind(this);
 };
 
@@ -28,12 +29,19 @@ RenderManager.prototype = {
 		if(this.skipFramesCounter < this.skipFrames) {
 			this.skipFramesCounter++;
 		} else {
-			this.onEnterFrame.dispatch();
-			this.view.render();
-			this.onExitFrame.dispatch();
+			this.render();
 			this.skipFramesCounter = 0;
 		}
 		if(!this._requestStop) requestAnimationFrame(this.renderLoop);
+	},
+
+	/**
+	 * render one frame
+	 */
+	render: function() {
+		this.onEnterFrame.dispatch();
+		this.view.render();
+		this.onExitFrame.dispatch();
 	},
 
 	/**
