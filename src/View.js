@@ -136,6 +136,13 @@ View.prototype = {
 				style.width = window.innerWidth + 'px';
 				style.height = window.innerHeight + 'px';
 				break;
+			case DOMMode.CONTAINER:
+				style.position = "absolute";
+				style.left = "0px";
+				style.right = "0px";
+				style.width = canvasContainer.parentNode.width;
+				style.height = canvasContainer.parentNode.height;
+				break;
 			default:
 		}
 	},

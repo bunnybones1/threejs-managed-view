@@ -1,5 +1,6 @@
 var enums = {
-	FULLSCREEN : "fullscreen"
+	FULLSCREEN : "fullscreen",
+	CONTAINER: "container"
 }
 
 module.exports = enums;
