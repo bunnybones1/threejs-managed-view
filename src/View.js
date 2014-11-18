@@ -139,9 +139,9 @@ View.prototype = {
 			case DOMMode.CONTAINER:
 				style.position = "absolute";
 				style.left = "0px";
-				style.right = "0px";
-				style.width = canvasContainer.parentNode.width;
-				style.height = canvasContainer.parentNode.height;
+				style.top = "0px";
+				style.width = this.canvasContainer.parentNode.width;
+				style.height = this.canvasContainer.parentNode.height;
 				break;
 			default:
 		}
