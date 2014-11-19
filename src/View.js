@@ -17,7 +17,7 @@ function View(props) {
 
 	props = props || {};
 
-	this.skipRender = props.skipRender;
+	this.skipRender = Boolean(props.skipRender);
 	this.scene = props.scene || new THREE.Scene();
 	props.rendererSettings = props.rendererSettings || {};
 	if(props.camera) {
