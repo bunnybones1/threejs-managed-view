@@ -9,10 +9,22 @@ loadAndRunScripts(
 		'lib/threex.rendererstats.js'
 	],
 	function() {
+
+		var containerDiv = document.createElement('div');
+		containerDiv.id = 'threejsContainer';
+		document.getElementsByTagName('body')[0].appendChild(containerDiv);
+		console.log(containerDiv);
+		containerDiv.style.position = 'absolute';
+		containerDiv.style.left = '25%';
+		containerDiv.style.top = '25%';
+		containerDiv.style.width = '50%';
+		containerDiv.style.height = '50%';
+
 		Resize.minWidth = 600;
 		Resize.minHeight = 400;
 		var view = new ManagedView.View({
-			stats:true
+			stats: true,
+			canvasContainer: containerDiv
 		});
 
 		var cols = 10;
