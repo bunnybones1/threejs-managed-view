@@ -30,6 +30,7 @@ function View(props) {
 	this.autoStartRender = props.autoStartRender !== undefined ? props.autoStartRender : true;
 	this.canvasContainerID = props.canvasContainerID || "WebGLCanvasContainer";
 
+	this.domMode = props.domMode || props.canvasContainer ? DOMMode.CONTAINER : DOMMode.FULLSCREEN;
 	this.canvasContainer = props.canvasContainer || this.createCanvasContainer(this.canvasContainerID);
 	this.canvasID = props.canvasID || "WebGLCanvas";
 	this.domMode = props.domMode || this.canvasContainer ? DOMMode.CONTAINER : DOMMode.FULLSCREEN;
@@ -84,9 +85,9 @@ View.prototype = {
 	 * Creates the canvas DOM Element and appends it to the document body
 	 * @return {CanvasElement} The newly created canvas element.
 	 */
-	createCanvasContainer: function() {
+	createCanvasContainer: function(id) {
 		var canvasContainer = document.createElement("div");
-		canvasContainer.id = this.canvasContainerID;
+		canvasContainer.id = id;
 		canvasContainer.width = window.innerWidth;
 		canvasContainer.height = window.innerHeight;
 		this.addCanvasContainerToDOMBody(canvasContainer);
@@ -133,8 +134,8 @@ View.prototype = {
 				style.position = "fixed";
 				style.left = "0px";
 				style.top = "0px";
-				style.width = window.innerWidth + 'px';
-				style.height = window.innerHeight + 'px';
+				style.width = '100%';
+				style.height = '100%';
 				break;
 			case DOMMode.CONTAINER:
 				style.position = "absolute";
