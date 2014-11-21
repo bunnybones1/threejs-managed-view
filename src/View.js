@@ -16,6 +16,8 @@ function View(props) {
 	this.addCanvasToContainer = this.addCanvasToContainer.bind(this);
 
 	props = props || {};
+
+	this.skipRender = Boolean(props.skipRender);
 	this.scene = props.scene || new THREE.Scene();
 	props.rendererSettings = props.rendererSettings || {};
 	if(props.camera) {
@@ -78,7 +80,8 @@ View.prototype = {
 	 */
 	render: function () {
 		PerformanceTweaker.update();
-		this.renderer.render(this.scene, this.camera);
+		if (!this.skipRender)
+			this.renderer.render(this.scene, this.camera);
 	},
 
 	/**
