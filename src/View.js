@@ -31,23 +31,25 @@ function View(props) {
 	}
 	this.autoStartRender = props.autoStartRender !== undefined ? props.autoStartRender : true;
 	this.canvasContainerID = props.canvasContainerID || "WebGLCanvasContainer";
+
+	this.domMode = props.domMode || props.canvasContainer ? DOMMode.CONTAINER : DOMMode.FULLSCREEN;
+	this.canvasContainer = props.canvasContainer || this.createCanvasContainer(this.canvasContainerID);
 	this.canvasID = props.canvasID || "WebGLCanvas";
-	this.domMode = props.domMode || DOMMode.FULLSCREEN;
+	this.domMode = props.domMode || this.canvasContainer ? DOMMode.CONTAINER : DOMMode.FULLSCREEN;
 	this.domSize = {x:0, y:0};
 	
 	//use provided canvas or make your own
-	this.canvasContainer = document.getElementById(this.canvasContainerID) || this.createCanvasContainer();
 	this.canvas = document.getElementById(this.canvasID) || this.createCanvas();
 	this.rendererSettings = _.merge({
 		canvas: this.canvas,
 		antialias: true,
-
 	}, props.rendererSettings);
 
-	if( props.renderer !== undefined)
+	if( props.renderer !== undefined) {
 		this.renderer = props.renderer;
-	else 
+	} else {
 		this.renderer = new THREE.WebGLRenderer(this.rendererSettings);
+	}
 
 	if(this.rendererSettings.autoClear === false) this.renderer.autoClear = false;
 
@@ -71,7 +73,6 @@ View.prototype = {
 		this.setSize = this.setSize.bind(this);
 		onResizeSignal.add(this.setSize);
 		Resize.bump(this.setSize);
-
 	},
 	/**
 	 * Renders the scene to the canvas using the renderer
@@ -87,9 +88,9 @@ View.prototype = {
 	 * Creates the canvas DOM Element and appends it to the document body
 	 * @return {CanvasElement} The newly created canvas element.
 	 */
-	createCanvasContainer: function() {
+	createCanvasContainer: function(id) {
 		var canvasContainer = document.createElement("div");
-		canvasContainer.id = this.canvasContainerID;
+		canvasContainer.id = id;
 		canvasContainer.width = window.innerWidth;
 		canvasContainer.height = window.innerHeight;
 		this.addCanvasContainerToDOMBody(canvasContainer);
@@ -136,21 +137,25 @@ View.prototype = {
 				style.position = "fixed";
 				style.left = "0px";
 				style.top = "0px";
-				style.width = window.innerWidth + 'px';
-				style.height = window.innerHeight + 'px';
+				style.width = '100%';
+				style.height = '100%';
 				break;
 			case DOMMode.CONTAINER:
 				style.position = "absolute";
 				style.left = "0px";
 				style.top = "0px";
-				style.width = this.canvasContainer.parentNode.width;
-				style.height = this.canvasContainer.parentNode.height;
+				style.width = this.canvasContainer.clientWidth + 'px';
+				style.height = this.canvasContainer.clientHeight + 'px';
 				break;
 			default:
 		}
 	},
 
 	setSize: function(w, h) {
+		if(this.domMode == DOMMode.CONTAINER) {
+			w = this.canvasContainer.clientWidth;
+			h = this.canvasContainer.clientHeight;
+		}
 		this.domSize.x = w;
 		this.domSize.y = h;
 		this.canvas.style.width = w;
