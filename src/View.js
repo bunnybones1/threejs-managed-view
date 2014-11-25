@@ -146,7 +146,6 @@ View.prototype = {
 				style.top = "0px";
 				style.width = this.canvasContainer.clientWidth + 'px';
 				style.height = this.canvasContainer.clientHeight + 'px';
-				debugger;
 				break;
 			default:
 		}
