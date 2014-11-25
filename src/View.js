@@ -33,7 +33,6 @@ function View(props) {
 	this.canvasContainerID = props.canvasContainerID || "WebGLCanvasContainer";
 
 	this.domMode = props.domMode || (props.canvasContainer ? DOMMode.CONTAINER : DOMMode.FULLSCREEN);
-	debugger;
 	this.canvasContainer = props.canvasContainer || this.createCanvasContainer(this.canvasContainerID);
 	this.canvasID = props.canvasID || "WebGLCanvas";
 	this.domMode = props.domMode || (this.canvasContainer ? DOMMode.CONTAINER : DOMMode.FULLSCREEN);
