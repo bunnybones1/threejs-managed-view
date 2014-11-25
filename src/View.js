@@ -29,13 +29,14 @@ function View(props) {
 		this.camera.position.y = 8.0;
 		this.camera.lookAt(this.scene.position);
 	}
-	this.autoStartRender = props.autoStartRender !== undefined ? props.autoStartRender : true;
+	this.autoStartRender = props.autoStartRender !== (undefined ? props.autoStartRender : true);
 	this.canvasContainerID = props.canvasContainerID || "WebGLCanvasContainer";
 
-	this.domMode = props.domMode || props.canvasContainer ? DOMMode.CONTAINER : DOMMode.FULLSCREEN;
+	this.domMode = props.domMode || (props.canvasContainer ? DOMMode.CONTAINER : DOMMode.FULLSCREEN);
+	debugger;
 	this.canvasContainer = props.canvasContainer || this.createCanvasContainer(this.canvasContainerID);
 	this.canvasID = props.canvasID || "WebGLCanvas";
-	this.domMode = props.domMode || this.canvasContainer ? DOMMode.CONTAINER : DOMMode.FULLSCREEN;
+	this.domMode = props.domMode || (this.canvasContainer ? DOMMode.CONTAINER : DOMMode.FULLSCREEN);
 	this.domSize = {x:0, y:0};
 	
 	//use provided canvas or make your own
@@ -146,6 +147,7 @@ View.prototype = {
 				style.top = "0px";
 				style.width = this.canvasContainer.clientWidth + 'px';
 				style.height = this.canvasContainer.clientHeight + 'px';
+				debugger;
 				break;
 			default:
 		}
