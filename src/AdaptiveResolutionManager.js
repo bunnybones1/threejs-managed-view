@@ -1,18 +1,20 @@
 var signals = require('signals');
 var FPS = require('./FPS');
 
-function PerformanceTweaker(props) {
+function AdaptiveResolutionManager(props) {
 	props = props || {};
 	this.degradeWhen = props.degradeWhen !== undefined ? props.degradeWhen : this.degradeWhen;
 	this.upgradeWhen = props.upgradeWhen !== undefined ? props.upgradeWhen : this.upgradeWhen;
-	this.lastLoop = new Date;
+	this.denominatorMax = props.denominatorMax !== undefined ? props.denominatorMax : this.denominatorMax;
+	this.changeFactor = props.changeFactor !== undefined ? props.changeFactor : this.changeFactor;
+	this.updateFrequency = props.updateFrequency !== undefined ? props.updateFrequency : this.updateFrequency;
 	this.onChange = new signals.Signal();
 };
 
-PerformanceTweaker.prototype = {
+AdaptiveResolutionManager.prototype = {
 	denominator: 1,
-	degradeWhen: 16,
-	upgradeWhen: 28,
+	degradeWhen: 10,
+	upgradeWhen: 24,
 	denominatorMax: 8,
 	dirty: 0,
 	updateFrequency: 5,
@@ -50,4 +52,4 @@ PerformanceTweaker.prototype = {
 	}
 }
 
-module.exports = new PerformanceTweaker();
+module.exports = AdaptiveResolutionManager;

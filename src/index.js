@@ -3,5 +3,5 @@ module.exports = {
 	RenderManager : require('./RenderManager'),
 	RenderStats : require('./RenderStats'),
 	View : require('./View'),
-	PerformanceTweaker : require('./PerformanceTweaker')
+	AdaptiveResolutionManager : require('./AdaptiveResolutionManager'),
 }

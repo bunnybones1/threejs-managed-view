@@ -24,7 +24,12 @@ loadAndRunScripts(
 		Resize.minHeight = 400;
 		var view = new ManagedView.View({
 			stats: true,
-			canvasContainer: containerDiv
+			canvasContainer: containerDiv,
+			adaptiveResolution: false,
+			adaptiveResolutionSettings: {
+				upgradeWhen: 55,
+				degradeWhen: 50
+			}
 		});
 
 		var cols = 10;

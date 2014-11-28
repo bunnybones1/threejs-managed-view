@@ -1,7 +1,7 @@
 var DOMMode = require('./DOMMode'),
 	EventUtils = require('browser-event-adder'),
 	signals = require('signals'),
-	PerformanceTweaker = require('./PerformanceTweaker'),
+	AdaptiveResolutionManager = require('./AdaptiveResolutionManager'),
 	Resize = require('input-resize'),
 	onResizeSignal = Resize.onResize,
 	_ = require('lodash'),
@@ -12,10 +12,13 @@ var DOMMode = require('./DOMMode'),
  * @param {Object} props an object of properties to override default dehaviours
  */
 function View(props) {
+	props = props || {};
 	this.addCanvasContainerToDOMBody = this.addCanvasContainerToDOMBody.bind(this);
 	this.addCanvasToContainer = this.addCanvasToContainer.bind(this);
 
-	props = props || {};
+	this.adaptiveResolution = props.adaptiveResolution;
+	this.adaptiveResolutionManager = new AdaptiveResolutionManager(props.adaptiveResolutionSettings);
+
 
 	this.skipRender = Boolean(props.skipRender);
 	this.scene = props.scene || new THREE.Scene();
@@ -56,7 +59,7 @@ function View(props) {
 	this.renderManager = new RenderManager(this);
 	if(this.autoStartRender) this.renderManager.start();
 
-	PerformanceTweaker.onChange.add(this.onPerformanceTweakerChangeResolution.bind(this));
+	this.adaptiveResolutionManager.onChange.add(this.onAdaptiveResolutionManagerChangeResolution.bind(this));
 
 	this.setupResizing();
 
@@ -79,9 +82,10 @@ View.prototype = {
 	 * @return {[type]} [description]
 	 */
 	render: function () {
-		PerformanceTweaker.update();
-		if (!this.skipRender)
+		if(this.adaptiveResolution) this.adaptiveResolutionManager.update();
+		if (!this.skipRender) {
 			this.renderer.render(this.scene, this.camera);
+		}
 	},
 
 	/**
@@ -165,8 +169,8 @@ View.prototype = {
 		this.camera.updateProjectionMatrix();
 
 		this.setResolution(
-			~~(w / PerformanceTweaker.denominator), 
-			~~(h / PerformanceTweaker.denominator)
+			~~(w / this.adaptiveResolutionManager.denominator), 
+			~~(h / this.adaptiveResolutionManager.denominator)
 		);
 	},
 
@@ -178,7 +182,7 @@ View.prototype = {
 		this.canvas.style.height = this.domSize.y + 'px';
 	},
 
-	onPerformanceTweakerChangeResolution: function(dynamicScale) {
+	onAdaptiveResolutionManagerChangeResolution: function(dynamicScale) {
 		this.setResolution(
 			~~(window.innerWidth * dynamicScale),
 			~~(window.innerHeight * dynamicScale)
