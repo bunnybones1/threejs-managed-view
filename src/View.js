@@ -155,8 +155,8 @@ View.prototype = {
 		}
 	},
 
-	setSize: function(w, h) {
-		if(this.domMode == DOMMode.CONTAINER) {
+	setSize: function(w, h, force) {
+		if(this.domMode == DOMMode.CONTAINER && !force) {
 			w = this.canvasContainer.clientWidth;
 			h = this.canvasContainer.clientHeight;
 		}
@@ -174,6 +174,13 @@ View.prototype = {
 		);
 	},
 
+	getSize: function() {
+		return {
+			width: this.domSize.x,
+			width: this.domSize.y
+		};
+	},
+
 	setResolution: function(w, h) {
 		this.canvas.width = w;
 		this.canvas.height = h;
@@ -182,11 +189,37 @@ View.prototype = {
 		this.canvas.style.height = this.domSize.y + 'px';
 	},
 
+	getResolution: function() {
+		return {
+			width: this.canvas.width,
+			height: this.canvas.height
+		}
+	},
+
 	onAdaptiveResolutionManagerChangeResolution: function(dynamicScale) {
 		this.setResolution(
 			~~(window.innerWidth * dynamicScale),
 			~~(window.innerHeight * dynamicScale)
 		);
+	},
+
+	captureImageData: function(options) {
+		options = _.merge({
+			width: 800,
+			height: 600,
+			format: 'jpeg'	//or png
+		}, options || {});
+		if(options.format == 'jpg') options.format = 'jpeg';
+		var backupSize = this.getSize();
+		var backupResolution = this.getResolution();
+		this.setSize(options.width, options.height, true);
+		this.setResolution(options.width, options.height);
+		this.renderManager.render();
+		var imageData = this.canvas.toDataURL("image/" + options.format);
+		this.setSize(backupSize.width, backupSize.height);
+		this.setResolution(backupResolution.width, backupResolution.height);
+		this.renderManager.render();
+		return imageData;
 	}
 };
 
