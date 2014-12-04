@@ -188,7 +188,6 @@ View.prototype = {
 		this.camera.right = w;
 		this.camera.top = 0;
 		this.camera.bottom = h;
-		debugger;
 	},
 
 	getSize: function() {
