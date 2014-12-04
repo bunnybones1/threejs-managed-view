@@ -19,7 +19,8 @@
     "loadandrunscripts": "^1.0.0"
   },
   "scripts": {
-    "test": "beefy test.js --live --open"
+    "test": "beefy test.js --live --open",
+    "testOrtho": "beefy testOrtho.js --live --open"
   },
   "keywords": [
     "threejs",

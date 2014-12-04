@@ -32,6 +32,11 @@ function View(props) {
 		this.camera.position.y = 8.0;
 		this.camera.lookAt(this.scene.position);
 	}
+	if(this.camera instanceof THREE.PerspectiveCamera) {
+		this.setCamera = this.setCameraPerspective;
+	} else if (this.camera instanceof THREE.OrthographicCamera) {
+		this.setCamera = this.setCameraOthrographic;
+	}
 	this.autoStartRender = props.autoStartRender !== (undefined ? props.autoStartRender : true);
 	this.canvasContainerID = props.canvasContainerID || "WebGLCanvasContainer";
 
@@ -164,14 +169,26 @@ View.prototype = {
 		this.domSize.y = h;
 		this.canvas.style.width = w;
 		this.canvas.style.height = h;
-		this.camera.aspect = w/h;
-		this.camera.setLens(w, h);
+		this.setCamera(w, h);
 		this.camera.updateProjectionMatrix();
 
 		this.setResolution(
 			~~(w / this.adaptiveResolutionManager.denominator), 
 			~~(h / this.adaptiveResolutionManager.denominator)
 		);
+	},
+
+	setCameraPerspective: function(w, h) {
+		this.camera.aspect = w/h;
+		this.camera.setLens(w, h);
+	},
+
+	setCameraOthrographic: function(w, h) {
+		this.camera.left = 0;
+		this.camera.right = w;
+		this.camera.top = 0;
+		this.camera.bottom = h;
+		debugger;
 	},
 
 	getSize: function() {
