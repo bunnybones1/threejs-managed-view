@@ -13,6 +13,7 @@
     "browser-event-adder": "^1.0.1",
     "input-resize": "^2.1.0",
     "lodash": "^2.4.1",
+    "raf": "^2.0.4",
     "signals": "^1.0.0"
   },
   "devDependencies": {
