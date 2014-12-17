@@ -16,9 +16,6 @@ function View(props) {
 	this.addCanvasToContainer = this.addCanvasToContainer.bind(this);
 
 	props = props || {};
-
-	this.tweakPerformance = props.tweakPerformance !== false;
-	this.skipRender = Boolean(props.skipRender);
 	this.scene = props.scene || new THREE.Scene();
 	props.rendererSettings = props.rendererSettings || {};
 	if(props.camera) {
@@ -33,9 +30,10 @@ function View(props) {
 	this.autoStartRender = props.autoStartRender !== undefined ? props.autoStartRender : true;
 	this.canvasContainerID = props.canvasContainerID || "WebGLCanvasContainer";
 
-	this.domMode = props.domMode || (props.canvasContainer ? DOMMode.CONTAINER : DOMMode.FULLSCREEN);
+	this.domMode = props.domMode || props.canvasContainer ? DOMMode.CONTAINER : DOMMode.FULLSCREEN;
 	this.canvasContainer = props.canvasContainer || this.createCanvasContainer(this.canvasContainerID);
 	this.canvasID = props.canvasID || "WebGLCanvas";
+	this.domMode = props.domMode || this.canvasContainer ? DOMMode.CONTAINER : DOMMode.FULLSCREEN;
 	this.domSize = {x:0, y:0};
 	
 	//use provided canvas or make your own
@@ -79,10 +77,8 @@ View.prototype = {
 	 * @return {[type]} [description]
 	 */
 	render: function () {
-		if (this.tweakPerformance)
-			PerformanceTweaker.update();
-		if (!this.skipRender)
-			this.renderer.render(this.scene, this.camera);
+		PerformanceTweaker.update();
+		this.renderer.render(this.scene, this.camera);
 	},
 
 	/**
