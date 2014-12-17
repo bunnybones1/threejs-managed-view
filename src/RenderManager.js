@@ -54,7 +54,6 @@ RenderManager.prototype = {
 	start: function() {
 		if (this.running) return;
 		this.running = true;
-		debugger;
 		this._frame = raf(this.renderLoop);
 	},
 
