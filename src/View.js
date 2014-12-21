@@ -193,7 +193,7 @@ View.prototype = {
 	getSize: function() {
 		return {
 			width: this.domSize.x,
-			width: this.domSize.y
+			height: this.domSize.y
 		};
 	},
 
