@@ -29,7 +29,8 @@ loadAndRunScripts(
 			adaptiveResolutionSettings: {
 				upgradeWhen: 55,
 				degradeWhen: 50
-			}
+			},
+			useRafPolyfill: false
 		});
 
 		var cols = 10;
@@ -55,15 +56,16 @@ loadAndRunScripts(
 			};
 		};
 
-		setTimeout(function() {
-			var format = 'jpeg';
-			var imageData = view.captureImageData({
-				width: 1920,
-				height: 1080,
-				format: format
-			});
-			var image = imageData.replace("image/"+format, "image/octet-stream"); //Convert image to 'octet-stream' (Just a download, really)
-			window.location.href = image;
-		});
+
+		// setTimeout(function() {
+		// 	var format = 'jpeg';
+		// 	var imageData = view.captureImageData({
+		// 		width: 1920,
+		// 		height: 1080,
+		// 		format: format
+		// 	});
+		// 	var image = imageData.replace("image/"+format, "image/octet-stream"); //Convert image to 'octet-stream' (Just a download, really)
+		// 	window.location.href = image;
+		// });
 	}
 )

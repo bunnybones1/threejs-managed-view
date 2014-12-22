@@ -1,13 +1,31 @@
 var signals = require('signals');
 var raf = require('raf');
 
+//This is almost ironic, but I have to disable raf module during development because it has a tendency to gobble up errors that I need for debugging.
+var stopLooping = false;
+function rafSucksForDebugging(renderLoop) { 
+	if(stopLooping) {
+		stopLooping = false;
+	} else {
+		requestAnimationFrame(renderLoop);
+	}
+}
+rafSucksForDebugging.cancel = function() {
+	stopLooping = true;
+}
+
+
+
 /**
  * Manages render timing, pause and unpause
  * @param {View} view the view to manage
  */
-function RenderManager(view) {
+function RenderManager(view, useRafPolyfill) {
 	this.running = false;
 	this._frame = 0;
+
+	useRafPolyfill = false;
+	if(useRafPolyfill === false) raf = rafSucksForDebugging;
 
 	this.view = view;
 	this.skipFrames = 0;
@@ -35,7 +53,6 @@ RenderManager.prototype = {
 			this.render();
 			this.skipFramesCounter = 0;
 		}
-
 		this._frame = raf(this.renderLoop);
 	},
 

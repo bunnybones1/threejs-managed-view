@@ -61,7 +61,7 @@ function View(props) {
 
 	if(this.rendererSettings.autoClear === false) this.renderer.autoClear = false;
 
-	this.renderManager = new RenderManager(this);
+	this.renderManager = new RenderManager(this, props.useRafPolyfill);
 	if(this.autoStartRender) this.renderManager.start();
 
 	this.adaptiveResolutionManager.onChange.add(this.onAdaptiveResolutionManagerChangeResolution.bind(this));
