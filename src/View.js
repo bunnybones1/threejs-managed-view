@@ -45,7 +45,7 @@ function View(props) {
 	this.canvasID = props.canvasID || "WebGLCanvas";
 	this.domMode = props.domMode || (this.canvasContainer ? DOMMode.CONTAINER : DOMMode.FULLSCREEN);
 	this.domSize = {x:0, y:0};
-	
+
 	//use provided canvas or make your own
 	this.canvas = document.getElementById(this.canvasID) || this.createCanvas();
 	this.rendererSettings = _.merge({
@@ -173,7 +173,7 @@ View.prototype = {
 		this.camera.updateProjectionMatrix();
 
 		this.setResolution(
-			~~(w / this.adaptiveResolutionManager.denominator), 
+			~~(w / this.adaptiveResolutionManager.denominator),
 			~~(h / this.adaptiveResolutionManager.denominator)
 		);
 	},
@@ -229,11 +229,11 @@ View.prototype = {
 		var backupSize = this.getSize();
 		var backupResolution = this.getResolution();
 		this.setSize(options.width, options.height, true);
-		this.setResolution(options.width, options.height);
+		// this.setResolution(options.width, options.height); // breaks the resolution(canvas width and height) size, makes it double. it is being properly set in this.setSize, that's why this is not necesarry
 		this.renderManager.render();
 		var imageData = this.canvas.toDataURL("image/" + options.format);
 		this.setSize(backupSize.width, backupSize.height);
-		this.setResolution(backupResolution.width, backupResolution.height);
+		// this.setResolution(backupResolution.width, backupResolution.height); // breaks the resolution(canvas width and height) size, makes it double. it is being properly set in this.setSize, that's why this is not necesarry
 		this.renderManager.render();
 		return imageData;
 	}
