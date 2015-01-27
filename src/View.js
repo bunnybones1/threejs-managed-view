@@ -220,22 +220,26 @@ View.prototype = {
 	},
 
 	captureImageData: function(options) {
+		var canvas = this.canvas;
+		var oldWidth = canvas.width;
+		var oldHeight = canvas.height;
+
 		options = _.merge({
-			width: 800,
-			height: 600,
-			format: 'jpeg'	//or png
-		}, options || {});
-		if(options.format == 'jpg') options.format = 'jpeg';
-		var backupSize = this.getSize();
-		var backupResolution = this.getResolution();
-		this.setSize(options.width, options.height, true);
-		this.setResolution(options.width, options.height);
-		this.renderManager.render();
-		var imageData = this.canvas.toDataURL("image/" + options.format);
-		this.setSize(backupSize.width, backupSize.height);
-		this.setResolution(backupResolution.width, backupResolution.height);
-		this.renderManager.render();
-		return imageData;
+			width: oldWidth,
+			height: oldHeight,
+			format: 'jpeg'
+		}, options);
+		var format = options.format === 'jpg' ? 'jpeg' : options.format;
+
+	    canvas.width = options.width;
+        canvas.height = options.height;
+	    
+	    var type = ['image/', format].join('');
+	    var imageData = canvas.toDataURL(type, options.encoderOptions);
+	    this.renderManager.render();
+        canvas.width = oldWidth;
+        canvas.height = oldHeight;
+	    return imageData;
 	}
 };
 
