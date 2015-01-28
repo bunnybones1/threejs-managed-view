@@ -224,7 +224,7 @@ View.prototype = {
 		var oldWidth = this.domSize.x;
 		var oldHeight = this.domSize.y;
 
-		options = _.extend({
+		options = _.merge({
 			width: oldWidth,
 			height: oldHeight,
 			format: 'jpeg'
@@ -233,7 +233,7 @@ View.prototype = {
 
 		this.setSize(options.width, options.height);
 		
-		var type = ['image/', format].join('');
+		var type = 'image/' + format;
 		var oldSkip = this.skipRender;
 		this.skipRender = false;
 	    this.renderManager.render();
