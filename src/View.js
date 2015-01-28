@@ -236,12 +236,12 @@ View.prototype = {
 		var type = 'image/' + format;
 		var oldSkip = this.skipRender;
 		this.skipRender = false;
-	    this.renderManager.render();
-	    this.skipRender = oldSkip;
-        
-	    var imageData = canvas.toDataURL(type, options.encoderOptions);
-        this.setSize(oldWidth, oldHeight);
-	    return imageData;
+		this.renderManager.render();
+		this.skipRender = oldSkip;
+
+		var imageData = canvas.toDataURL(type, options.encoderOptions);
+		this.setSize(oldWidth, oldHeight);
+		return imageData;
 	}
 };
 
