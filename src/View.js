@@ -224,21 +224,24 @@ View.prototype = {
 		var oldWidth = canvas.width;
 		var oldHeight = canvas.height;
 
-		options = _.merge({
+		options = _.extend({
 			width: oldWidth,
 			height: oldHeight,
 			format: 'jpeg'
 		}, options);
 		var format = options.format === 'jpg' ? 'jpeg' : options.format;
 
+		console.log("OPTIONS", options)
+
 	    canvas.width = options.width;
         canvas.height = options.height;
-	    
+		// this.setSize(options.width, options.height);
+		
 	    var type = ['image/', format].join('');
 	    var imageData = canvas.toDataURL(type, options.encoderOptions);
 	    this.renderManager.render();
-        canvas.width = oldWidth;
-        canvas.height = oldHeight;
+        
+        // this.setSize(oldWidth, oldHeight);
 	    return imageData;
 	}
 };
