@@ -221,8 +221,8 @@ View.prototype = {
 
 	captureImageData: function(options) {
 		var canvas = this.canvas;
-		var oldWidth = canvas.width;
-		var oldHeight = canvas.height;
+		var oldWidth = this.domSize.x;
+		var oldHeight = this.domSize.y;
 
 		options = _.extend({
 			width: oldWidth,
@@ -231,17 +231,16 @@ View.prototype = {
 		}, options);
 		var format = options.format === 'jpg' ? 'jpeg' : options.format;
 
-		console.log("OPTIONS", options)
-
-	    canvas.width = options.width;
-        canvas.height = options.height;
-		// this.setSize(options.width, options.height);
+		this.setSize(options.width, options.height);
 		
-	    var type = ['image/', format].join('');
-	    var imageData = canvas.toDataURL(type, options.encoderOptions);
+		var type = ['image/', format].join('');
+		var oldSkip = this.skipRender;
+		this.skipRender = false;
 	    this.renderManager.render();
+	    this.skipRender = oldSkip;
         
-        // this.setSize(oldWidth, oldHeight);
+	    var imageData = canvas.toDataURL(type, options.encoderOptions);
+        this.setSize(oldWidth, oldHeight);
 	    return imageData;
 	}
 };
