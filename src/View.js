@@ -220,21 +220,27 @@ View.prototype = {
 	},
 
 	captureImageData: function(options) {
+		var canvas = this.canvas;
+		var oldWidth = this.domSize.x;
+		var oldHeight = this.domSize.y;
+
 		options = _.merge({
-			width: 800,
-			height: 600,
-			format: 'jpeg'	//or png
-		}, options || {});
-		if(options.format == 'jpg') options.format = 'jpeg';
-		var backupSize = this.getSize();
-		var backupResolution = this.getResolution();
-		this.setSize(options.width, options.height, true);
-		this.setResolution(options.width, options.height);
+			width: oldWidth,
+			height: oldHeight,
+			format: 'jpeg'
+		}, options);
+		var format = options.format === 'jpg' ? 'jpeg' : options.format;
+
+		this.setSize(options.width, options.height);
+		
+		var type = 'image/' + format;
+		var oldSkip = this.skipRender;
+		this.skipRender = false;
 		this.renderManager.render();
-		var imageData = this.canvas.toDataURL("image/" + options.format);
-		this.setSize(backupSize.width, backupSize.height);
-		this.setResolution(backupResolution.width, backupResolution.height);
-		this.renderManager.render();
+		this.skipRender = oldSkip;
+
+		var imageData = canvas.toDataURL(type, options.encoderOptions);
+		this.setSize(oldWidth, oldHeight);
 		return imageData;
 	}
 };
