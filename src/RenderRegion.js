@@ -5,6 +5,8 @@ function RenderRegion(view) {
 	var _fullscreen = true;
 	var _fullWidth = 0;
 	var _fullHeight = 0;
+	var _halfWidth = 0;
+	var _halfHeight = 0;
 	var _x = 0;
 	var _y = 0;
 	var _w = 0;
@@ -36,6 +38,8 @@ function RenderRegion(view) {
 		_y = ~~y;
 		_w = ~~w;
 		_h = ~~h;
+		_wHalf = _w * .5;
+		_hHalf = _h * .5;
 		_fullscreen = _x === 0 && _y === 0 && _w == _fullWidth && _h == _fullHeight;
 		update(true);
 	}
@@ -48,13 +52,31 @@ function RenderRegion(view) {
 	function setSize(w, h) {
 		_fullWidth = ~~w;
 		_fullHeight = ~~h;
+		_halfWidth = _fullWidth * .5;
+		_halfHeight = _fullHeight * .5;
 		_fullscreen = _x === 0 && _y === 0 && _w == _fullWidth && _h == _fullHeight;
 		update(true);
+	}
+	var point = {
+		x: 0,
+		y: 0
+	};
+
+	function getScreenSpacePositionOfPixel(x, y) {
+		if(_state && !_fullscreen) {
+			point.x = (x - _x) / _wHalf - 1;
+			point.y = (y - _y) / _hHalf - 1;
+		} else {
+			point.x = x / _halfWidth - 1;
+			point.y = y / _halfHeight - 1;
+		}
+		return point;
 	}
 	this.onRenderRegionChangeSignal = onRenderRegionChangeSignal;
 	this.setRegion = setRegion;
 	this.setState = setState;
 	this.setSize = setSize;
+	this.getScreenSpacePositionOfPixel = getScreenSpacePositionOfPixel;
 
 }
 

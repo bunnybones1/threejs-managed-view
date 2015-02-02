@@ -226,6 +226,10 @@ View.prototype = {
 		);
 	},
 
+	getScreenSpacePositionOfPixel: function(x, y) {
+		return this.renderRegion.getScreenSpacePositionOfPixel(x, y);
+	},
+
 	captureImageData: function(options) {
 		var canvas = this.canvas;
 		var oldWidth = this.domSize.x;
