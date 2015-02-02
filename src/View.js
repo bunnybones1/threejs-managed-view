@@ -183,7 +183,6 @@ View.prototype = {
 	setCameraPerspective: function(w, h) {
 		this.camera.aspect = w/h;
 		this.camera.setLens(w, h);
-		console.log('camera', w, h);
 		if(w == 720) {
 			console.log(w, h);
 		}
