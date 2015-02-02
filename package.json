@@ -1,6 +1,6 @@
 {
   "name": "threejs-managed-view",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "A set of convenient functionality to manage threejs render speed and resolution. Focused on full-screen viewports.",
   "main": "src/index.js",
   "license": "MIT",
