@@ -14,37 +14,41 @@ function RenderRegion(view) {
 
 	function update(shouldDispatch) {
 		if(_state && !_fullscreen) {
+			// console.log('regioned', shouldDispatch);
 			renderer.setScissor(_x, _fullHeight-_y-_h, _w, _h);
 			renderer.setViewport(_x, _fullHeight-_y-_h, _w, _h);
 			renderer.enableScissorTest(true);
+			// view.setCamera(_w, _h);
 		} else {
+			// console.log('fullscreened', shouldDispatch);
 			renderer.setScissor(0, 0, _fullWidth, _fullHeight);
 			renderer.setViewport(0, 0, _fullWidth, _fullHeight);
 			renderer.enableScissorTest(false);
+			// view.setCamera(_fullWidth, _fullHeight);
 		}
-		view.setCamera(_w, _h);
 		if(shouldDispatch) onRenderRegionChangeSignal.dispatch(_x, _y, _w, _h);
 	}
 
 	function setRegion(x, y, w, h){
+		// console.log('region setRegion');
 		_state = true;
-		_x = x;
-		_y = y;
-		_w = w;
-		_h = h;
-		_fullscreen = _x == 0 && _y == 0 && _w == _fullWidth && _h == _fullHeight;
+		_x = ~~x;
+		_y = ~~y;
+		_w = ~~w;
+		_h = ~~h;
+		_fullscreen = _x === 0 && _y === 0 && _w == _fullWidth && _h == _fullHeight;
 		update(true);
 	}
 
 	function setState(state, shouldDispatch) {
-		_newState = state;
-		udpate(shouldDispatch);
+		_state = state;
+		update(shouldDispatch);
 	}
 
 	function setSize(w, h) {
-		_fullWidth = w;
-		_fullHeight = h;
-		_fullscreen = _x == 0 && _y == 0 && _w == _fullWidth && _h == _fullHeight;
+		_fullWidth = ~~w;
+		_fullHeight = ~~h;
+		_fullscreen = _x === 0 && _y === 0 && _w == _fullWidth && _h == _fullHeight;
 		update(true);
 	}
 	this.onRenderRegionChangeSignal = onRenderRegionChangeSignal;
