@@ -33,21 +33,23 @@ loadAndRunScripts(
 			useRafPolyfill: false
 		});
 
-		var cols = 10;
-		var rows = 10;
+		view.camera.position.y = 0;
+		view.camera.lookAt(new THREE.Vector3());
+		var cols = 30;
+		var rows = 30;
 
-		var minX = -2;
-		var minY = -2;
-		var rangeX = 4;
-		var rangeY = 4;
+		var minX = -6;
+		var minY = -6;
+		var rangeX = 12;
+		var rangeY = 12;
 		
 		var geom = new THREE.SphereGeometry(.1, 16, 16);
 
 		var mat = new THREE.MeshBasicMaterial();
 
-		for (var ix = cols - 1; ix >= 0; ix--) {
+		for (var ix = cols - 1; ix > 0; ix--) {
 			var ratioX = ix / cols;
-			for (var iy = rows - 1; iy >= 0; iy--) {
+			for (var iy = rows - 1; iy > 0; iy--) {
 				var ratioY = iy / rows;
 				var mesh = new THREE.Mesh(geom, mat);
 				mesh.position.x = minX + ratioX * rangeX;
@@ -55,6 +57,11 @@ loadAndRunScripts(
 				view.scene.add(mesh);
 			};
 		};
+
+		view.setRenderRegion(100, 0, view.domSize.x-100, view.domSize.y);
+		Resize.onResize.add(function(w, h) {
+			view.setRenderRegion(100, 0, view.domSize.x-100, view.domSize.y);
+		})
 
 
 		// setTimeout(function() {

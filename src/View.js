@@ -1,9 +1,8 @@
 var DOMMode = require('./DOMMode'),
 	EventUtils = require('browser-event-adder'),
-	signals = require('signals'),
+	Signal = require('signals').Signal,
 	AdaptiveResolutionManager = require('./AdaptiveResolutionManager'),
 	Resize = require('input-resize'),
-	onResizeSignal = Resize.onResize,
 	_ = require('lodash'),
 	RenderStats = require('./RenderStats'),
 	RenderManager = require('./RenderManager');
@@ -78,9 +77,13 @@ function View(props) {
 
 View.prototype = {
 	setupResizing: function() {
+		this.onResizeSignal = Resize.onResize;
 		this.setSize = this.setSize.bind(this);
-		onResizeSignal.add(this.setSize);
-		Resize.bump(this.setSize);
+		this.setRenderRegion = this.setRenderRegion.bind(this);
+		this.onResizeSignal.add(this.setSize);
+		this.onRenderRegionChangeSignal = new Signal();
+		// this.onRenderRegionChangeSignal.add(this.setRenderRegion);
+		Resize.bump();
 	},
 	/**
 	 * Renders the scene to the canvas using the renderer
@@ -170,7 +173,6 @@ View.prototype = {
 		this.canvas.style.width = w;
 		this.canvas.style.height = h;
 		this.setCamera(w, h);
-		this.camera.updateProjectionMatrix();
 
 		this.setResolution(
 			~~(w / this.adaptiveResolutionManager.denominator), 
@@ -181,6 +183,8 @@ View.prototype = {
 	setCameraPerspective: function(w, h) {
 		this.camera.aspect = w/h;
 		this.camera.setLens(w, h);
+		// console.log(w, h);
+		this.camera.updateProjectionMatrix();
 	},
 
 	setCameraOthrographic: function(w, h) {
@@ -188,6 +192,7 @@ View.prototype = {
 		this.camera.right = w;
 		this.camera.top = 0;
 		this.camera.bottom = h;
+		this.camera.updateProjectionMatrix();
 	},
 
 	getSize: function() {
@@ -203,6 +208,27 @@ View.prototype = {
 		this.renderer.setSize(w, h, false);
 		this.canvas.style.width = this.domSize.x + 'px';
 		this.canvas.style.height = this.domSize.y + 'px';
+	},
+
+	setRenderRegion: function(x, y, w, h) {
+		var fullWidth = this.domSize.x;
+		var fullHeight = this.domSize.y;
+		this.renderer.setScissor(
+			x,
+			fullHeight-y-h,
+			w,
+			h
+		);
+		this.renderer.setViewport(
+			x,
+			fullHeight-y-h,
+			w,
+			h
+		);
+		this.setCamera(w, h);
+		this.renderer.enableScissorTest(!(x == 0 && y == 0 && w == fullWidth && h == fullHeight));
+		this.onRenderRegionChangeSignal.dispatch(x, y, w, h);
+		console.log('region');
 	},
 
 	getResolution: function() {
@@ -234,10 +260,10 @@ View.prototype = {
 		this.setSize(options.width, options.height);
 		
 		var type = 'image/' + format;
-		var oldSkip = this.skipRender;
+		var originalSkip = this.skipRender;
 		this.skipRender = false;
 		this.renderManager.render();
-		this.skipRender = oldSkip;
+		this.skipRender = originalSkip;
 
 		var imageData = canvas.toDataURL(type, options.encoderOptions);
 		this.setSize(oldWidth, oldHeight);

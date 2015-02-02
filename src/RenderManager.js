@@ -24,7 +24,6 @@ function RenderManager(view, useRafPolyfill) {
 	this.running = false;
 	this._frame = 0;
 
-	useRafPolyfill = false;
 	if(useRafPolyfill === false) raf = rafSucksForDebugging;
 
 	this.view = view;
