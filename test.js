@@ -58,9 +58,9 @@ loadAndRunScripts(
 			};
 		};
 
-		view.setRenderRegion(100, 0, view.domSize.x-100, view.domSize.y);
+		view.renderRegion.setRegion(50, 50, view.domSize.x-100, view.domSize.y-100);
 		Resize.onResize.add(function(w, h) {
-			view.setRenderRegion(100, 0, view.domSize.x-100, view.domSize.y);
+			view.renderRegion.setRegion(50, 50, view.domSize.x-100, view.domSize.y-100);
 		})
 
 

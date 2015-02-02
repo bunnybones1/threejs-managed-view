@@ -2,6 +2,7 @@ var DOMMode = require('./DOMMode'),
 	EventUtils = require('browser-event-adder'),
 	Signal = require('signals').Signal,
 	AdaptiveResolutionManager = require('./AdaptiveResolutionManager'),
+	RenderRegion = require('./RenderRegion'),
 	Resize = require('input-resize'),
 	_ = require('lodash'),
 	RenderStats = require('./RenderStats'),
@@ -79,10 +80,8 @@ View.prototype = {
 	setupResizing: function() {
 		this.onResizeSignal = Resize.onResize;
 		this.setSize = this.setSize.bind(this);
-		this.setRenderRegion = this.setRenderRegion.bind(this);
+		this.renderRegion = new RenderRegion(this);
 		this.onResizeSignal.add(this.setSize);
-		this.onRenderRegionChangeSignal = new Signal();
-		// this.onRenderRegionChangeSignal.add(this.setRenderRegion);
 		Resize.bump();
 	},
 	/**
@@ -178,6 +177,7 @@ View.prototype = {
 			~~(w / this.adaptiveResolutionManager.denominator), 
 			~~(h / this.adaptiveResolutionManager.denominator)
 		);
+		this.renderRegion.setSize(w, h);
 	},
 
 	setCameraPerspective: function(w, h) {
@@ -208,27 +208,6 @@ View.prototype = {
 		this.renderer.setSize(w, h, false);
 		this.canvas.style.width = this.domSize.x + 'px';
 		this.canvas.style.height = this.domSize.y + 'px';
-	},
-
-	setRenderRegion: function(x, y, w, h) {
-		var fullWidth = this.domSize.x;
-		var fullHeight = this.domSize.y;
-		this.renderer.setScissor(
-			x,
-			fullHeight-y-h,
-			w,
-			h
-		);
-		this.renderer.setViewport(
-			x,
-			fullHeight-y-h,
-			w,
-			h
-		);
-		this.setCamera(w, h);
-		this.renderer.enableScissorTest(!(x == 0 && y == 0 && w == fullWidth && h == fullHeight));
-		this.onRenderRegionChangeSignal.dispatch(x, y, w, h);
-		console.log('region');
 	},
 
 	getResolution: function() {
