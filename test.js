@@ -58,12 +58,6 @@ loadAndRunScripts(
 			};
 		};
 
-		view.renderRegion.setRegion(50, 50, view.domSize.x-100, view.domSize.y-100);
-		Resize.onResize.add(function(w, h) {
-			view.renderRegion.setRegion(50, 50, view.domSize.x-100, view.domSize.y-100);
-		})
-
-
 		// setTimeout(function() {
 		// 	var format = 'jpeg';
 		// 	var imageData = view.captureImageData({

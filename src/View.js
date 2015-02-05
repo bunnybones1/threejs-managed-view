@@ -2,7 +2,6 @@ var DOMMode = require('./DOMMode'),
 	EventUtils = require('browser-event-adder'),
 	Signal = require('signals').Signal,
 	AdaptiveResolutionManager = require('./AdaptiveResolutionManager'),
-	RenderRegion = require('./RenderRegion'),
 	Resize = require('input-resize'),
 	_ = require('lodash'),
 	RenderStats = require('./RenderStats'),
@@ -19,6 +18,7 @@ function View(props) {
 	this.adaptiveResolution = props.adaptiveResolution;
 	this.adaptiveResolutionManager = new AdaptiveResolutionManager(props.adaptiveResolutionSettings);
 
+	this.fitAxis = props.fitAxis || 'y';
 
 	this.skipRender = Boolean(props.skipRender);
 	this.scene = props.scene || new THREE.Scene();
@@ -80,7 +80,6 @@ View.prototype = {
 	setupResizing: function() {
 		this.onResizeSignal = Resize.onResize;
 		this.setSize = this.setSize.bind(this);
-		this.renderRegion = new RenderRegion(this);
 		this.onResizeSignal.add(this.setSize);
 		Resize.bump();
 	},
@@ -177,12 +176,11 @@ View.prototype = {
 			~~(w / this.adaptiveResolutionManager.denominator), 
 			~~(h / this.adaptiveResolutionManager.denominator)
 		);
-		this.renderRegion.setSize(w, h);
 	},
 
 	setCameraPerspective: function(w, h) {
 		this.camera.aspect = w/h;
-		this.camera.setLens(w, h);
+		if(this.fitAxis == 'x') this.camera.setLens(w, h);
 		if(w == 720) {
 			console.log(w, h);
 		}
