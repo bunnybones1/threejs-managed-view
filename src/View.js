@@ -74,6 +74,8 @@ function View(props) {
 		this.renderManager.onExitFrame.add(this.stats.onExitFrame);
 	}
 
+	this.dpr = this.renderer.devicePixelRatio;
+
 }
 
 View.prototype = {
@@ -203,8 +205,8 @@ View.prototype = {
 	},
 
 	setResolution: function(w, h) {
-		this.canvas.width = w;
-		this.canvas.height = h;
+		this.canvas.width = w * this.dpr;
+		this.canvas.height = h * this.dpr;
 		this.renderer.setSize(w, h, false);
 		this.canvas.style.width = this.domSize.x + 'px';
 		this.canvas.style.height = this.domSize.y + 'px';
@@ -224,10 +226,6 @@ View.prototype = {
 		);
 	},
 
-	getScreenSpacePositionOfPixel: function(x, y) {
-		return this.renderRegion.getScreenSpacePositionOfPixel(x, y);
-	},
-
 	captureImageData: function(options) {
 		var canvas = this.canvas;
 		var oldWidth = this.domSize.x;
@@ -239,8 +237,7 @@ View.prototype = {
 			format: 'jpeg'
 		}, options);
 		var format = options.format === 'jpg' ? 'jpeg' : options.format;
-
-		this.setSize(options.width, options.height);
+		this.setSize(options.width/this.dpr, options.height/this.dpr, true);
 		
 		var type = 'image/' + format;
 		var originalSkip = this.skipRender;
@@ -249,7 +246,7 @@ View.prototype = {
 		this.skipRender = originalSkip;
 
 		var imageData = canvas.toDataURL(type, options.encoderOptions);
-		this.setSize(oldWidth, oldHeight);
+		this.setSize(oldWidth, oldHeight, true);
 		return imageData;
 	}
 };
