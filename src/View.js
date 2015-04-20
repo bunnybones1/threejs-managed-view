@@ -80,9 +80,10 @@ function View(props) {
 
 View.prototype = {
 	setupResizing: function() {
-		this.onResizeSignal = Resize.onResize;
+		this._onResizeSignal = Resize.onResize;
 		this.setSize = this.setSize.bind(this);
-		this.onResizeSignal.add(this.setSize);
+		this._onResizeSignal.add(this.setSize);
+		this.onResizeSignal = new Signal();
 		Resize.bump();
 	},
 	/**
@@ -178,6 +179,8 @@ View.prototype = {
 			~~(w / this.adaptiveResolutionManager.denominator), 
 			~~(h / this.adaptiveResolutionManager.denominator)
 		);
+
+		this.onResizeSignal.dispatch(w, h);
 	},
 
 	setCameraPerspective: function(w, h) {
