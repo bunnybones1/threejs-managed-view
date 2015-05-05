@@ -66,6 +66,8 @@ function View(props) {
 
 	this.adaptiveResolutionManager.onChange.add(this.onAdaptiveResolutionManagerChangeResolution.bind(this));
 
+	this.dpr = this.renderer.devicePixelRatio;
+
 	this.setupResizing();
 
 	if(props.stats) {
@@ -73,8 +75,6 @@ function View(props) {
 		this.renderManager.onEnterFrame.add(this.stats.onEnterFrame);
 		this.renderManager.onExitFrame.add(this.stats.onExitFrame);
 	}
-
-	this.dpr = this.renderer.devicePixelRatio;
 
 }
 
