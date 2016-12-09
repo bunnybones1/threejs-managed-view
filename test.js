@@ -1,10 +1,11 @@
+var THREE = require('three');
+window.THREE = THREE;
 var ManagedView = require('./');
 var loadAndRunScripts = require('loadandrunscripts');
 var Resize = require('input-resize');
 
 loadAndRunScripts(
 	[
-		'bower_components/three.js/three.js',
 		'lib/stats.min.js',
 		'lib/threex.rendererstats.js'
 	],

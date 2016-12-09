@@ -1,9 +1,10 @@
 var DOMMode = require('./DOMMode'),
+	THREE = require('three'),
 	EventUtils = require('browser-event-adder'),
 	Signal = require('signals').Signal,
+	defaults = require('lodash.defaults'),
 	AdaptiveResolutionManager = require('./AdaptiveResolutionManager'),
 	Resize = require('input-resize'),
-	_ = require('lodash'),
 	RenderStats = require('./RenderStats'),
 	RenderManager = require('./RenderManager');
 /**
@@ -48,10 +49,10 @@ function View(props) {
 	
 	//use provided canvas or make your own
 	this.canvas = document.getElementById(this.canvasID) || this.createCanvas();
-	this.rendererSettings = _.merge({
+	this.rendererSettings = defaults(props.rendererSettings, {
 		canvas: this.canvas,
-		antialias: true,
-	}, props.rendererSettings);
+		antialias: true
+	});
 
 	if( props.renderer !== undefined) {
 		this.renderer = props.renderer;
@@ -234,11 +235,11 @@ View.prototype = {
 		var oldWidth = this.domSize.x;
 		var oldHeight = this.domSize.y;
 
-		options = _.merge({
+		options = defaults(options, {
 			width: oldWidth,
 			height: oldHeight,
 			format: 'jpeg'
-		}, options);
+		});
 		var format = options.format === 'jpg' ? 'jpeg' : options.format;
 		this.setSize(options.width/this.dpr, options.height/this.dpr, true);
 		

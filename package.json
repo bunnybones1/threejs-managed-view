@@ -12,9 +12,9 @@
   "dependencies": {
     "browser-event-adder": "^1.0.1",
     "input-resize": "^2.1.0",
-    "lodash": "^2.4.1",
-    "raf": "^2.0.4",
-    "signals": "^1.0.0"
+    "lodash.defaults": "^4.2.0",
+    "signals": "^1.0.0",
+    "three": "^0.82.1"
   },
   "devDependencies": {
     "loadandrunscripts": "^1.0.0"
