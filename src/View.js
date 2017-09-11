@@ -35,7 +35,7 @@ function View(props) {
 	}
 	if(this.camera instanceof THREE.PerspectiveCamera) {
 		this.setCamera = this.setCameraPerspective;
-	} else if (this.camera instanceof THREE.OrthographicCamera) {
+	} else if (this.camera.isOrthographicCamera) {
 		this.setCamera = this.setCameraOthrographic;
 	}
 	this.autoStartRender = props.autoStartRender !== (undefined ? props.autoStartRender : true);
@@ -51,23 +51,28 @@ function View(props) {
 	this.canvas = document.getElementById(this.canvasID) || this.createCanvas();
 	this.rendererSettings = defaults(props.rendererSettings, {
 		canvas: this.canvas,
-		antialias: true
+		antialias: true,
+		preserveDrawingBuffer: false
 	});
+
 
 	if( props.renderer !== undefined) {
 		this.renderer = props.renderer;
 	} else {
 		this.renderer = new THREE.WebGLRenderer(this.rendererSettings);
 	}
-
-	if(this.rendererSettings.autoClear === false) this.renderer.autoClear = false;
+	if(this.rendererSettings.autoClear === false) {
+		this.renderer.autoClear = false;
+		this.renderer.autoClearColor = false;
+	}
 
 	this.renderManager = new RenderManager(this, props.useRafPolyfill);
 	if(this.autoStartRender) this.renderManager.start();
 
 	this.adaptiveResolutionManager.onChange.add(this.onAdaptiveResolutionManagerChangeResolution.bind(this));
 
-	this.dpr = this.renderer.devicePixelRatio;
+	this.renderer.setPixelRatio(window.devicePixelRatio);
+	this.dpr = this.renderer.getPixelRatio();
 
 	this.setupResizing();
 
